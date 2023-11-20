@@ -30,23 +30,15 @@ describe Spree::PromotionHandler::PromotionDuplicator do
     let(:new_promotion) { subject.duplicate }
 
     context 'model fields' do
-      let(:excluded_fields) { ['code', 'path', 'id', 'created_at', 'updated_at', 'deleted_at'] }
-      let(:new_code) { 'secure_random_code' }
-      before do
-        allow(SecureRandom).to receive(:hex).with(4).and_return(new_code)
-      end
+      let(:excluded_fields) { ['code', 'name', 'path', 'id', 'created_at', 'updated_at', 'deleted_at'] }
 
-      it 'assigns a unique code to the duplicated promotion' do
-        expect(SecureRandom).to receive(:hex).with(4).and_return(new_code)
-        result = new_promotion
-        expect(result.code).to match new_code
-      end
-
-      it 'returns a duplicate of a promotion with the path field changed' do
+      it 'returns a duplicate of a promotion with the path, name and code fields changed' do
+        expect("New #{promotion.name}").to eq new_promotion.name
         expect(new_promotion.path).to match /#{promotion.path}_[a-zA-Z]{4}/
+        expect(new_promotion.code).to match /#{promotion.code}_[a-zA-Z]{4}/
       end
 
-      it 'returns a duplicate of a promotion with all the fields (except the path and code fields) the same' do
+      it 'returns a duplicate of a promotion with all the fields (except the path, name and code fields) the same' do
         promotion.attributes.each_key do |key|
           expect(promotion.send(key)).to eq new_promotion.send(key) unless excluded_fields.include?(key)
         end
