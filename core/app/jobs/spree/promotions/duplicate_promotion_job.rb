@@ -5,9 +5,9 @@ module Spree
         promotion = find_promotion(promotion_id)
         Spree::PromotionHandler::PromotionDuplicator.new(promotion).duplicate
       end
-    
+
       private
-    
+
       def find_promotion(id)
         Spree::Promotion.find(id)
       end
