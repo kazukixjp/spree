@@ -9,8 +9,8 @@ module Spree
       let(:size) { 50 }
 
       it "enqueues DuplicatePromotionJob jobs", sidekiq: :inline do
-        expect(DuplicatePromotionJob)
-          .to receive(:perform_async)
+        expect(Spree::Promotions::DuplicatePromotionJob)
+          .to receive(:perform_later)
           .at_least(50).times
           .with(promotion.id)
 

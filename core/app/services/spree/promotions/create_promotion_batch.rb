@@ -3,7 +3,7 @@ module Spree
     class CreatePromotionBatch
       def self.call(promotion, size)
         size.times do
-          DuplicatePromotionJob.perform_async(promotion.id)
+          DuplicatePromotionJob.perform_later(promotion.id)
         end
       end
     end
