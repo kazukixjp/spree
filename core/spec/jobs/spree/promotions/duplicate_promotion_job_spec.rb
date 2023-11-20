@@ -16,7 +16,7 @@ module Spree
       end
 
       it "sends #duplicate to the duplicator service" do
-        expect(Spree::PromotionHandler::PromotionDuplicator)
+        expect(Spree::PromotionHandler::PromotionBatchDuplicator)
           .to receive(:new)
           .with(promotion)
           .and_return(double)

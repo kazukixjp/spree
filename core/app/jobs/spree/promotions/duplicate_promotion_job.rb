@@ -3,7 +3,7 @@ module Spree
     class DuplicatePromotionJob < Spree::BaseJob
       def perform(promotion_id)
         promotion = find_promotion(promotion_id)
-        Spree::PromotionHandler::PromotionDuplicator.new(promotion).duplicate
+        Spree::PromotionHandler::PromotionBatchDuplicator.new(promotion).duplicate
       end
 
       private
