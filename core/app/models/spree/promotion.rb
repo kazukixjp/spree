@@ -15,6 +15,7 @@ module Spree
     attr_reader :eligibility_errors, :generate_code
 
     belongs_to :promotion_category, optional: true
+    belongs_to :promotion_batch, optional: true
 
     has_many :promotion_rules, autosave: true, dependent: :destroy
     alias rules promotion_rules
