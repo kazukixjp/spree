@@ -8,6 +8,10 @@ module Spree
       let(:promotion) { create(:promotion) }
       let(:size) { 50 }
 
+      it "creates a PromotioBatch" do
+        expect{ batch }.to change { Spree::PromotionBatch.count }.by(1)
+      end
+
       it "enqueues DuplicatePromotionJob jobs", sidekiq: :inline do
         expect(Spree::Promotions::DuplicatePromotionJob)
           .to receive(:perform_later)
