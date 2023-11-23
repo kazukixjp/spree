@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Spree::PromotionHandler::PromotionBatchDuplicator do
-  subject { described_class.new(promotion) }
+  subject { described_class.new(promotion, promotion_batch.id) }
 
   let!(:promo_category) { create(:promotion_category) }
   let!(:calculator) { create(:calculator) }
@@ -28,9 +28,10 @@ describe Spree::PromotionHandler::PromotionBatchDuplicator do
 
   describe '#duplicate' do
     let(:new_promotion) { subject.duplicate }
+    let(:promotion_batch) { create(:promotion_batch) }
 
     context 'model fields' do
-      let(:excluded_fields) { ['code', 'path', 'id', 'created_at', 'updated_at', 'deleted_at'] }
+      let(:excluded_fields) { ['code', 'path', 'id', 'created_at', 'updated_at', 'deleted_at', 'promotion_batch_id'] }
       let(:new_code) { 'secure_random_code' }
       before do
         allow(SecureRandom).to receive(:hex).with(4).and_return(new_code)
@@ -50,6 +51,10 @@ describe Spree::PromotionHandler::PromotionBatchDuplicator do
         promotion.attributes.each_key do |key|
           expect(promotion.send(key)).to eq new_promotion.send(key) unless excluded_fields.include?(key)
         end
+      end
+
+      it 'associates the duplicated promotion with a batch' do
+        expect(new_promotion.promotion_batch_id).to match promotion_batch.id
       end
     end
 
