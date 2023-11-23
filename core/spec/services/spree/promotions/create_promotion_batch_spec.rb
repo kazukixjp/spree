@@ -15,6 +15,7 @@ module Spree
           .and_return(promotion)
         allow(Spree::PromotionBatch)
           .to receive(:create!)
+          .with(template_promotion_id: promotion.id)
           .and_return(promotion_batch)
         allow(Spree::Promotions::DuplicatePromotionJob)
           .to receive(:perform_later)
@@ -24,6 +25,7 @@ module Spree
       it "creates a PromotionBatch" do
         expect(Spree::PromotionBatch)
           .to receive(:create!)
+          .with(template_promotion_id: promotion.id)
 
           create_promotion_batch
       end
