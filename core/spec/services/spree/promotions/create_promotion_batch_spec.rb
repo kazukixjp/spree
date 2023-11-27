@@ -10,9 +10,6 @@ module Spree
       let(:size) { 50 }
 
       before do
-        allow(Spree::Promotion)
-          .to receive(:find)
-          .and_return(promotion)
         allow(Spree::PromotionBatch)
           .to receive(:create!)
           .with(template_promotion_id: promotion.id)
