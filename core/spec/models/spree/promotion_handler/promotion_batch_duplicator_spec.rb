@@ -32,15 +32,30 @@ describe Spree::PromotionHandler::PromotionBatchDuplicator do
 
     context 'model fields' do
       let(:excluded_fields) { ['code', 'path', 'id', 'created_at', 'updated_at', 'deleted_at', 'promotion_batch_id'] }
-      let(:new_code) { 'secure_random_code' }
-      before do
-        allow(SecureRandom).to receive(:hex).with(4).and_return(new_code)
+
+      context "when code is provided" do
+        subject { described_class.new(promotion, promotion_batch.id, code: provided_code) }
+
+        let(:provided_code) { 'provided_code' }
+
+        it 'assigns a unique code to the duplicated promotion' do
+          result = new_promotion
+          expect(result.code).to match provided_code
+        end
       end
 
-      it 'assigns a unique code to the duplicated promotion' do
-        expect(SecureRandom).to receive(:hex).with(4).and_return(new_code)
-        result = new_promotion
-        expect(result.code).to match new_code
+      context "when code is NOT provided" do
+        let(:new_code) { 'secure_random_code' }
+
+        before do
+          allow(SecureRandom).to receive(:hex).with(4).and_return(new_code)
+        end
+
+        it 'assigns a unique code to the duplicated promotion' do
+          expect(SecureRandom).to receive(:hex).with(4).and_return(new_code)
+          result = new_promotion
+          expect(result.code).to match new_code
+        end
       end
 
       it 'returns a duplicate of a promotion with the path field changed' do
