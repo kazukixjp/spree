@@ -6,8 +6,8 @@ module Spree
       described_class.new(content: content, promotion_batch_id: promotion_batch.id).call
     end
 
-    let(:promotion) { create(:promotion) }
-    let(:promotion_batch) { create(:promotion_batch, template_promotion_id: promotion.id) }
+    let(:promotion) { build(:promotion) }
+    let(:promotion_batch) { build(:promotion_batch, template_promotion_id: promotion.id) }
     let(:code1) { 'cf14cec8' }
     let(:code2) { '4b2ff1a7' }
     let(:content) do
@@ -15,6 +15,12 @@ module Spree
         #{code1}
         #{code2}
       CSV
+    end
+
+    before do
+      allow(Spree::PromotionBatch)
+        .to receive(:find)
+        .and_return(promotion_batch)
     end
 
     it "enqueues DuplicatePromotionJob jobs", sidekiq: :inline do
