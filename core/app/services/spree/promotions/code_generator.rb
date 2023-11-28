@@ -1,7 +1,7 @@
 module Spree
   module Promotions
     class CodeGenerator
-      def initialize(config)
+      def initialize(config = {})
         @config = config
       end
 
