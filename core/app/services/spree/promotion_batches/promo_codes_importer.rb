@@ -24,7 +24,11 @@ module Spree
       end
 
       def validate_file!
-        raise Error, "No file / Empty file" if parsed_rows.blank?
+        raise Error, "No file / Empty file" if validation_condition
+      end
+
+      def validation_condition
+        parsed_rows.blank?
       end
 
       def parsed_rows
