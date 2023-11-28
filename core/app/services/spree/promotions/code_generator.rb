@@ -6,13 +6,28 @@ module Spree
       end
 
       def build
-        compose
+        loop do
+          candidate = compose
+          break candidate if valid?(candidate)
+        end
       end
 
       private
 
+      attr_reader :config
+
+      def valid?(subject)
+        return true if config[:deny_list].nil?
+
+        violation_checks = config[:deny_list].map do |el|
+          subject.include?(el)
+        end
+
+        !violation_checks.any?
+      end
+
       def compose
-        case @config[:affix]
+        case config[:affix]
         when :prefix
           prefix_alorithm
         when :suffix
@@ -35,7 +50,7 @@ module Spree
       end
 
       def content
-        @config[:content]
+        config[:content]
       end
 
       def random_code

@@ -37,6 +37,25 @@ module Spree
         end
       end
 
+      context "deny-list" do
+        let(:forbidden_phrases) { %w(forbidden phrase) }
+        let(:config) do
+          {
+            deny_list: forbidden_phrases
+          }
+        end
+
+        before do
+          allow(SecureRandom)
+            .to receive(:hex).with(4)
+            .and_return("foo_#{forbidden_phrases.first}_bar", "foo_#{forbidden_phrases.last}_bar", random_code)
+        end
+
+        it "discards code containing forbidden phrases" do
+          expect(generated_code).to eq random_code
+        end
+      end
+
       context "default" do
         subject(:generated_code) { described_class.new.build }
 
