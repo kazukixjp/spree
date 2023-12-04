@@ -229,6 +229,9 @@ en:
       spree/promotion:
         one: Promotion
         other: Promotions
+      spree/promotion_batch:
+        one: Promotion Batch
+        other: Promotion Batches
       spree/promotion_category:
         one: Promotion Category
         other: Promotion Categories
@@ -1311,6 +1314,8 @@ en:
         manual: Manually choose
     products: Products
     promotion: Promotion
+    promotion_batch: Promotion Batch
+    promotion_batches: Promotion Batches
     promotionable: Promotable
     promotion_cloned: Promotion has been cloned
     promotion_not_cloned: "Promotion has not been cloned. Reason: %{error}"
@@ -1365,6 +1370,7 @@ en:
         description: Order includes products with specified taxon(s)
         name: Taxon(s)
     promotions: Promotions
+    promotion_batches: Promotion Batches
     promotion_uses: Promotion uses
     propagate_all_variants: Propagate all variants
     properties: Properties
