@@ -727,4 +727,20 @@ describe Spree::Promotion, type: :model do
       end
     end
   end
+
+  describe '#update_descendants' do
+    let(:promotion) { create(:promotion) }
+    let(:service) { instance_double(Spree::PromotionHandler::UpdateDescendantsService) }
+
+    it 'calls the service' do
+      expect(Spree::PromotionHandler::UpdateDescendantsService)
+        .to receive(:new)
+        .with(promotion)
+        .and_return(service)
+      expect(service)
+        .to receive(:call)
+
+      promotion.update(description: "anything")
+    end
+  end
 end

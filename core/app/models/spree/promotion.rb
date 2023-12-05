@@ -40,6 +40,8 @@ module Spree
 
     auto_strip_attributes :code, :path, :name
 
+    after_update :update_descendants
+
     scope :coupons, -> { where.not(code: nil) }
     scope :advertised, -> { where(advertise: true) }
     scope :applied, lambda {
@@ -236,6 +238,10 @@ module Spree
         break random_token unless self.class.exists?(code: random_token)
       end
       coupon_code
+    end
+
+    def update_descendants
+      Spree::PromotionHandler::UpdateDescendantsService.new(self).call
     end
   end
 end
