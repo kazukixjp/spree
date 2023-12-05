@@ -10,6 +10,7 @@ module Spree
 
       def duplicate
         @new_promotion = @promotion.dup
+        @new_promotion.usage_limit = 1
         @new_promotion.promotion_batch_id = @promotion_batch_id
         @new_promotion.path = "#{@promotion.path}_#{@random_string}"
         code_assignment

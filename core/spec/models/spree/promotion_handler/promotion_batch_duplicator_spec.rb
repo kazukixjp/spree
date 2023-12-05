@@ -31,7 +31,7 @@ describe Spree::PromotionHandler::PromotionBatchDuplicator do
     let(:promotion_batch) { create(:promotion_batch) }
 
     context 'model fields' do
-      let(:excluded_fields) { ['code', 'path', 'id', 'created_at', 'updated_at', 'deleted_at', 'promotion_batch_id'] }
+      let(:excluded_fields) { ['code', 'path', 'id', 'created_at', 'updated_at', 'deleted_at', 'promotion_batch_id', 'usage_limit'] }
 
       context "when code is provided" do
         subject { described_class.new(promotion, promotion_batch.id, code: provided_code) }
@@ -62,7 +62,7 @@ describe Spree::PromotionHandler::PromotionBatchDuplicator do
         expect(new_promotion.path).to match /#{promotion.path}_[a-zA-Z]{4}/
       end
 
-      it 'returns a duplicate of a promotion with all the fields (except the path and code fields) the same' do
+      it 'returns a duplicate of a promotion with all the fields (except the path, code and usage_limit fields) the same' do
         promotion.attributes.each_key do |key|
           expect(promotion.send(key)).to eq new_promotion.send(key) unless excluded_fields.include?(key)
         end
