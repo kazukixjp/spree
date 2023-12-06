@@ -119,6 +119,22 @@ describe Spree::Promotion, type: :model do
         expect(subject).to include(promotion_advertised)
       end
     end
+
+    describe '.non_batched' do
+      subject { described_class.non_batched }
+
+      let!(:non_batched_promotion) { create :promotion, promotion_batch_id: nil }
+      let!(:promotion_batch) { create :promotion_batch }
+      let!(:batched_promotion) { create :promotion, promotion_batch_id: promotion_batch.id  }
+
+      it 'is expected to not include batched promotion' do
+        expect(subject).not_to include(batched_promotion)
+      end
+
+      it 'is expected to include non_batched promotion' do
+        expect(subject).to include(non_batched_promotion)
+      end
+    end
   end
 
   describe '#destroy' do

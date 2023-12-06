@@ -50,6 +50,7 @@ module Spree
         ON spree_order_promotions.promotion_id = #{table_name}.id
       SQL
     }
+    scope :non_batched, -> { where(promotion_batch_id: nil) }
 
     self.whitelisted_ransackable_attributes = ['path', 'promotion_category_id', 'code']
 
