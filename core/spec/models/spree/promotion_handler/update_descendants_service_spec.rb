@@ -12,7 +12,7 @@ describe Spree::PromotionHandler::UpdateDescendantsService do
   context 'when the promotion is a template for a batch' do
     before do
       allow(Spree::PromotionBatch)
-        .to receive(where)
+        .to receive(:where)
         .with(template_promotion_id: template_promotion.id )
         .and_return(batches)
       allow(batch)
@@ -24,8 +24,8 @@ describe Spree::PromotionHandler::UpdateDescendantsService do
       expect(Spree::Promotions::HandleDescendantPromotionJob)
         .to receive(:perform_later)
         .with(
-          template_promotion_id: template_promotion.id
-          descendant_promotion_id: descendant_promotion.id
+          template_promotion_id: template_promotion.id,
+          descendant_promotion_id: descendant_promotion.id,
           promotion_batch_id: batch.id
         )
 
@@ -36,7 +36,7 @@ describe Spree::PromotionHandler::UpdateDescendantsService do
   context 'when the promotion is NOT a template for a batch' do
     before do
       allow(Spree::PromotionBatch)
-        .to receive(where)
+        .to receive(:where)
         .with(template_promotion_id: template_promotion.id )
         .and_return([])
     end
