@@ -3,23 +3,11 @@ require 'spec_helper'
 describe Spree::PromotionHandler::UpdateDescendantsService do
   subject { described_class.new(template_promotion).call }
 
-  let(:template_promotion) { build(:promotion) }
-  let(:descendant_promotion) { build(:promotion) }
-  let(:batch) { build(:promotion_batch) }
-  let(:batches) { [batch] }
-  let(:promotions) { [descendant_promotion] }
+  let(:template_promotion) { create(:promotion) }
+  let(:descendant_promotion) { create(:promotion, usage_limit: 1, promotion_batch_id: batch.id) }
+  let(:batch) { create(:promotion_batch, template_promotion_id: template_promotion.id ) }
 
   context 'when the promotion is a template for a batch' do
-    before do
-      allow(Spree::PromotionBatch)
-        .to receive(:where)
-        .with(template_promotion_id: template_promotion.id )
-        .and_return(batches)
-      allow(batch)
-        .to receive(:promotions)
-        .and_return(promotions)
-    end
-
     it 'enqueues a job' do
       expect(Spree::Promotions::HandleDescendantPromotionJob)
         .to receive(:perform_later)
