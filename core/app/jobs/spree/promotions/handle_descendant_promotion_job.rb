@@ -14,8 +14,8 @@ module Spree
         Spree::Promotion.find(id)
       end
 
-      def handle_promotion(promotion, promotion_batch_id, descendant_promotion)
-        Spree::PromotionHandler::XXXX.new(template_promotion, promotion_batch_id, descendant_promotion).duplicate
+      def handle_promotion(template_promotion, promotion_batch_id, descendant_promotion)
+        Spree::PromotionHandler::PromotionBatchUpdateHandler.new(template_promotion, promotion_batch_id, descendant_promotion).duplicate
       end
     end
   end
