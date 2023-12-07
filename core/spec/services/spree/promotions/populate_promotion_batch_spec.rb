@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 module Spree
-  describe Promotions::CreatePromotionBatch do
+  describe Promotions::PopulatePromotionBatch do
     describe "#call" do
-      subject(:create_promotion_batch) { described_class.call(promotion_batch, size) }
+      subject(:populate_promotion_batch) { described_class.call(promotion_batch, size) }
 
       let(:promotion_batch) { build(:promotion_batch) }
       let(:template_promotion_id) { double }
@@ -28,7 +28,7 @@ module Spree
           .at_least(50).times
           .with(template_promotion_id, id)
 
-        create_promotion_batch
+        populate_promotion_batch
       end
     end
   end
