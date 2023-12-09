@@ -20,6 +20,10 @@ FactoryBot.define do
     code { SecureRandom.hex(4) }
   end
 
+  trait :batched do
+    promotion_batch
+  end
+
   factory :promotion, class: Spree::Promotion do
     name { 'Promo' }
 
