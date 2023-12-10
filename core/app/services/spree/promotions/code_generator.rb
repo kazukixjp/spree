@@ -1,11 +1,14 @@
 module Spree
   module Promotions
     class CodeGenerator
+      MutuallyExclusiveInputsError = Class.new(StandardError)
+
       def initialize(config = {})
         @config = config
       end
 
       def build
+        validate_inputs if config[:deny_list]
         loop do
           candidate = compose
           break candidate if valid?(candidate)
@@ -15,6 +18,10 @@ module Spree
       private
 
       attr_reader :config
+
+      def validate_inputs
+        raise_error if inputs_invalid?
+      end
 
       def valid?(subject)
         return true if config[:deny_list].nil?
@@ -38,11 +45,11 @@ module Spree
       end
 
       def prefix_alorithm
-        content.concat(random_code)
+        clear_result.concat(content, random_code)
       end
 
       def suffix_alorithm
-        random_code.concat(content)
+        clear_result.concat(random_code, content)
       end
 
       def default_algorithm
@@ -55,6 +62,18 @@ module Spree
 
       def random_code
         SecureRandom.hex(4)
+      end
+
+      def clear_result
+        result = ""
+      end
+
+      def raise_error
+        raise MutuallyExclusiveInputsError, Spree.t(:mutually_exclusive_inputs)
+      end
+
+      def inputs_invalid?
+        config[:deny_list].include?(content)
       end
     end
   end

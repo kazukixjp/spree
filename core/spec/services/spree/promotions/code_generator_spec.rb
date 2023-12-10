@@ -63,6 +63,20 @@ module Spree
           expect(generate_code).to eq random_code
         end
       end
+
+      context "forbidden phrases contain the affix" do
+        let(:forbidden_phrases) { %w(black_week) }
+        let(:config) do
+          {
+            affix: :prefix,
+            content: "black_week",
+            deny_list: forbidden_phrases
+          }
+        end
+        it "returns an error" do
+          expect { generate_code }.to raise_error Spree::Promotions::CodeGenerator::MutuallyExclusiveInputsError
+        end
+      end
     end
   end
 end
