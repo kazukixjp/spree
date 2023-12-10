@@ -3,7 +3,7 @@ require 'spec_helper'
 module Spree
   describe Promotions::CodeGenerator do
     describe "#build" do
-      subject(:generated_code) { described_class.new(config).build }
+      subject(:generate_code) { described_class.new(config).build }
 
       let(:random_code) { 'secure_random_code' }
 
@@ -20,7 +20,7 @@ module Spree
         end
 
         it "creates a code with a given prefix" do
-          expect(generated_code).to eq config[:content].concat(random_code)
+          expect(generate_code).to eq config[:content].concat(random_code)
         end
       end
 
@@ -33,7 +33,7 @@ module Spree
         end
 
         it "creates a code with a given suffix" do
-          expect(generated_code).to eq random_code.concat(config[:content])
+          expect(generate_code).to eq random_code.concat(config[:content])
         end
       end
 
@@ -52,15 +52,15 @@ module Spree
         end
 
         it "discards code containing forbidden phrases" do
-          expect(generated_code).to eq random_code
+          expect(generate_code).to eq random_code
         end
       end
 
       context "default" do
-        subject(:generated_code) { described_class.new.build }
+        subject(:generate_code) { described_class.new.build }
 
         it "creates a code" do
-          expect(generated_code).to eq random_code
+          expect(generate_code).to eq random_code
         end
       end
     end
