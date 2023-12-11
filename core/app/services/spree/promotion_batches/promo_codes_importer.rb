@@ -11,9 +11,10 @@ module Spree
       def call
         validate_file!
 
+        config = { template_promotion_id: @promotion_batch.template_promotion_id, id: @promotion_batch.id }
         parsed_rows.each do |parsed_row|
           Spree::Promotions::DuplicatePromotionJob
-            .perform_later(@promotion_batch.template_promotion_id, @promotion_batch.id, code: parsed_row)
+            .perform_later(config, code: parsed_row)
         end
       end
 
