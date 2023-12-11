@@ -3,30 +3,39 @@ require 'spec_helper'
 module Spree
   describe Promotions::PopulatePromotionBatch do
     describe "#call" do
-      subject(:populate_promotion_batch) { described_class.call(promotion_batch, size) }
+      subject(:populate_promotion_batch) { described_class.call(config) }
 
-      let(:promotion_batch) { build(:promotion_batch) }
-      let(:template_promotion_id) { double }
-      let(:id) { double }
-      let(:size) { 50 }
+      let(:config) do
+        {
+          template_promotion_id: 1,
+          id: 2,
+          batch_size: 3,
+          affix: :prefix,
+          content: 'blackweek',
+          deny_list: %w(forbidden words)
+        }
+      end
+      let(:code_generator) { instance_double(Promotions::CodeGenerator) }
+      let(:code) { 'code' }
 
       before do
-        allow(promotion_batch)
-          .to receive(:template_promotion_id)
-          .and_return(template_promotion_id)
-        allow(promotion_batch)
-          .to receive(:id)
-          .and_return(id)
+        allow(Promotions::CodeGenerator)
+          .to receive(:new)
+          .with(config)
+          .and_return(code_generator)
+        allow(code_generator)
+          .to receive(:build)
+          .and_return(code)
         allow(Spree::Promotions::DuplicatePromotionJob)
           .to receive(:perform_later)
-          .with(template_promotion_id, id)
+          .with(config[:template_promotion_id], config[:id], code: code)
       end
 
       it "enqueues DuplicatePromotionJob jobs", sidekiq: :inline do
         expect(Spree::Promotions::DuplicatePromotionJob)
           .to receive(:perform_later)
-          .at_least(50).times
-          .with(template_promotion_id, id)
+          .at_least(config[:batch_size]).times
+          .with(config[:template_promotion_id], config[:id], code: code)
 
         populate_promotion_batch
       end
