@@ -1,9 +1,9 @@
 module Spree
   module Promotions
     class DuplicatePromotionJob < Spree::BaseJob
-      def perform(config)
+      def perform(config, code: nil)
         promotion = find_instance(config[:template_promotion_id], model: Spree::Promotion)
-        code = applicable_code(config)
+        code = code || applicable_code(config)
 
         Spree::PromotionHandler::PromotionBatchDuplicator.new(promotion, config[:id], code: code).duplicate
       end
