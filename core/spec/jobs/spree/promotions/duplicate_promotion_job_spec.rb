@@ -13,11 +13,7 @@ module Spree
       let(:config) do
         {
           template_promotion_id: 1,
-          id: 2,
-          batch_size: 3,
-          affix: :prefix,
-          content: 'blackweek',
-          deny_list: %w(forbidden words)
+          id: 2
         }
       end
 
