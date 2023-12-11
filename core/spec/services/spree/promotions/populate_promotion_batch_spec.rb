@@ -3,7 +3,7 @@ require 'spec_helper'
 module Spree
   describe Promotions::PopulatePromotionBatch do
     describe "#call" do
-      subject(:populate_promotion_batch) { described_class.call(config) }
+      subject(:populate_promotion_batch) { described_class.new(config).call }
 
       let(:config) do
         {

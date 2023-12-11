@@ -1,8 +1,12 @@
 module Spree
   module Promotions
     class PopulatePromotionBatch
-      def self.call(config)
-        size(config).times do
+      def initialize(config)
+        @config = config
+      end
+
+      def call
+        size.times do
           code = CodeGenerator.new(config).build
           DuplicatePromotionJob.perform_later(config[:template_promotion_id], config[:id], code: code)
         end
@@ -10,7 +14,9 @@ module Spree
 
       private
 
-      def self.size(config)
+      attr_accessor :config
+
+      def size
         config.delete(:batch_size)
       end
     end
