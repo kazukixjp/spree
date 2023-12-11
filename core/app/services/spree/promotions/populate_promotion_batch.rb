@@ -7,8 +7,7 @@ module Spree
 
       def call
         size.times do
-          code = CodeGenerator.new(config).build
-          DuplicatePromotionJob.perform_later(config[:template_promotion_id], config[:id], code: code)
+          DuplicatePromotionJob.perform_later(config)
         end
       end
 
