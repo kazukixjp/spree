@@ -10,14 +10,13 @@ module Spree
     let(:code1) { 'cf14cec8' }
     let(:code2) { '4b2ff1a7' }
     let(:template_promotion_id) { double }
-    let(:id) { double }
+    let(:batch_id) { double }
     let(:content) do
       <<~CSV
         #{code1}
         #{code2}
       CSV
     end
-    let(:config) { {template_promotion_id: template_promotion_id, id: id} }
 
     before do
       allow(Spree::PromotionBatch)
@@ -28,16 +27,16 @@ module Spree
         .and_return(template_promotion_id)
       allow(promotion_batch)
         .to receive(:id)
-        .and_return(id)
+        .and_return(batch_id)
     end
 
     it "enqueues DuplicatePromotionJob jobs", sidekiq: :inline do
       expect(Spree::Promotions::DuplicatePromotionJob)
         .to receive(:perform_later)
-        .with(config, code: code1)
+        .with(template_promotion_id: template_promotion_id, batch_id: batch_id, code: code1)
       expect(Spree::Promotions::DuplicatePromotionJob)
         .to receive(:perform_later)
-        .with(config, code: code2)
+        .with(template_promotion_id: template_promotion_id, batch_id: batch_id, code: code2)
 
       import_promo_codes
     end

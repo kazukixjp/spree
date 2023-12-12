@@ -11,10 +11,9 @@ module Spree
       def call
         validate_file!
 
-        config = { template_promotion_id: @promotion_batch.template_promotion_id, id: @promotion_batch.id }
         parsed_rows.each do |parsed_row|
           Spree::Promotions::DuplicatePromotionJob
-            .perform_later(config, code: parsed_row)
+            .perform_later(template_promotion_id: @promotion_batch.template_promotion_id, batch_id: @promotion_batch.id, code: parsed_row)
         end
       end
 
@@ -25,7 +24,7 @@ module Spree
       end
 
       def validate_file!
-        raise Error, "No file / Empty file" if validation_condition
+        raise Error, Spree.t('invalid_file') if validation_condition
       end
 
       def validation_condition
