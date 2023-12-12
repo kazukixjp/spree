@@ -20,8 +20,6 @@ module Spree
       end
 
       context 'when code is NOT provided' do
-        # subject(:execute_job) { described_class.new.perform(options) }
-
         let(:options) { {key: 'value'} }
 
         subject(:execute_job) do
@@ -60,8 +58,6 @@ module Spree
       end
 
       context 'when code IS provided' do
-        # subject(:execute_job) { described_class.new.perform(options, code: specified_code) }
-
         subject(:execute_job) do
           described_class.new.perform(template_promotion_id: promotion.id, batch_id: promotion_batch.id, code: specified_code)
         end
