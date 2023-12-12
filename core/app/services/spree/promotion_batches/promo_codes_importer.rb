@@ -10,6 +10,7 @@ module Spree
 
       def call
         validate_file!
+        validate_promotion_batch!
 
         parsed_rows.each do |parsed_row|
           Spree::Promotions::DuplicatePromotionJob
@@ -24,11 +25,19 @@ module Spree
       end
 
       def validate_file!
-        raise Error, Spree.t('invalid_file') if validation_condition
+        raise Error, Spree.t('invalid_file') if file_validation_condition
       end
 
-      def validation_condition
+      def file_validation_condition
         parsed_rows.blank?
+      end
+
+      def validate_promotion_batch!
+        raise Error, Spree.t('no_template_promotion') unless batch_validation_condition
+      end
+
+      def batch_validation_condition
+        @promotion_batch.template_promotion_id
       end
 
       def parsed_rows
