@@ -6,7 +6,7 @@ module Spree
         code = code || applicable_code(batch_id, options)
 
         Spree::PromotionHandler::PromotionBatchDuplicator.new(promotion, batch_id, code: code).duplicate
-      rescue CodeGenerator::MutuallyExclusiveInputsError => e
+      rescue CodeGenerator::MutuallyExclusiveInputsError, ActiveRecord::RecordNotUnique => e
         Rails.logger.error(e.message)
       end
 
