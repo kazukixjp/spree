@@ -1,11 +1,11 @@
 module Spree
   module Promotions
     class DuplicatePromotionJob < Spree::BaseJob
-      def perform(config, code: nil)
-        promotion = find_instance(config[:template_promotion_id], model: Spree::Promotion)
-        code = code || applicable_code(config)
+      def perform(template_promotion_id:, batch_id:, options: {}, code: nil)
+        promotion = find_instance(template_promotion_id, model: Spree::Promotion)
+        code = code || applicable_code(batch_id, options)
 
-        Spree::PromotionHandler::PromotionBatchDuplicator.new(promotion, config[:id], code: code).duplicate
+        Spree::PromotionHandler::PromotionBatchDuplicator.new(promotion, batch_id, code: code).duplicate
       end
 
       private
@@ -14,10 +14,10 @@ module Spree
         model.find(id)
       end
 
-      def applicable_code(config)
-        promotion_batch = find_instance(config[:id], model: Spree::PromotionBatch)
+      def applicable_code(id, options)
+        promotion_batch = find_instance(id, model: Spree::PromotionBatch)
         codes = codes(promotion_batch)
-        code_generator = code_generator(config)
+        code_generator = code_generator(options)
 
         loop do
           candidate = generate_code(code_generator)
@@ -29,8 +29,8 @@ module Spree
         promotion_batch.promotions.pluck :code
       end
 
-      def code_generator(config)
-        CodeGenerator.new(config)
+      def code_generator(options)
+        CodeGenerator.new(options)
       end
 
       def generate_code(generator)
