@@ -16,10 +16,10 @@ module Spree
         @new_promotion.stores = @promotion.stores
 
         ActiveRecord::Base.transaction do
+          @descendant_promotion.destroy!
           @new_promotion.save
           copy_rules
           copy_actions
-          @descendant_promotion.destroy!
         end
 
         @new_promotion
