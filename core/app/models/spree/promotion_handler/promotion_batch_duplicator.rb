@@ -28,9 +28,11 @@ module Spree
       private
 
       def code_assignment
-        return @new_promotion.generate_code=(true) unless @code
-
-        @new_promotion.code = @code
+        if @code
+          @new_promotion.code = @code
+        else
+          @new_promotion.generate_code=(true)
+        end
       end
     end
   end
