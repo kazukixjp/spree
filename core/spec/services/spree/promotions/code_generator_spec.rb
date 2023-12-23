@@ -77,6 +77,25 @@ module Spree
           expect { generate_code }.to raise_error Spree::Promotions::CodeGenerator::MutuallyExclusiveInputsError
         end
       end
+
+      context "runs out of retries" do
+        let(:forbidden_phrases) { (1..100).map(&:to_s) }
+        let(:config) do
+          {
+            deny_list: forbidden_phrases
+          }
+        end
+        let(:code_candidates) { forbidden_phrases }
+        before do
+          allow(SecureRandom)
+            .to receive(:hex).with(4)
+            .and_return(*code_candidates)
+        end
+
+        it "returns an error" do
+          expect { generate_code }.to raise_error Spree::Promotions::CodeGenerator::RetriesDepleted
+        end
+      end
     end
   end
 end

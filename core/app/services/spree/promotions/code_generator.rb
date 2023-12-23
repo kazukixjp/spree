@@ -2,6 +2,7 @@ module Spree
   module Promotions
     class CodeGenerator
       MutuallyExclusiveInputsError = Class.new(StandardError)
+      RetriesDepleted = Class.new(StandardError)
 
       def initialize(config = {})
         @config = config
@@ -9,10 +10,15 @@ module Spree
 
       def build
         validate_inputs if config[:deny_list]
-        loop do
+        success = false
+        result = 100.times do
           candidate = compose
-          break candidate if valid?(candidate)
+          if valid?(candidate)
+            success = true
+            break candidate
+          end
         end
+        success ? result : raise(RetriesDepleted)
       end
 
       private
