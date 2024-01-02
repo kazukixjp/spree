@@ -36,7 +36,7 @@ module Spree
           subject.include?(el)
         end
 
-        !violation_checks.any?
+        violation_checks.none?
       end
 
       def compose
