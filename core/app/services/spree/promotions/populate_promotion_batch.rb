@@ -9,7 +9,7 @@ module Spree
 
       def call
         size.times do
-          DuplicatePromotionJob.perform_later(template_promotion_id: template_promotion_id, batch_id: batch_id, options: options)
+          DuplicatePromotionJob.perform_later(template_promotion_id: template_promotion_id, batch_id: batch_id, options: options.except(:batch_size))
         end
       end
 
@@ -19,7 +19,7 @@ module Spree
       attr_reader :template_promotion_id, :batch_id
 
       def size
-        options.delete(:batch_size)
+        options[:batch_size]
       end
     end
   end

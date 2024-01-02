@@ -19,7 +19,7 @@ module Spree
         expect(Spree::Promotions::DuplicatePromotionJob)
           .to receive(:perform_later)
           .at_least(options[:batch_size]).times
-          .with(template_promotion_id: template_promotion_id, batch_id: batch_id, options: options)
+          .with(template_promotion_id: template_promotion_id, batch_id: batch_id, options: {})
 
         populate_promotion_batch
       end
