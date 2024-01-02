@@ -40,9 +40,7 @@ module Spree
       end
 
       def candidate_valid?(candidate, codes)
-        return true unless codes.include?(candidate)
-
-        false
+        codes.exclude?(candidate)
       end
     end
   end
