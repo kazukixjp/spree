@@ -4,10 +4,11 @@ module Spree
       MutuallyExclusiveInputsError = Class.new(StandardError)
       RetriesDepleted = Class.new(StandardError)
 
-      def initialize(content: nil, affix: nil, deny_list: [])
+      def initialize(content: nil, affix: nil, deny_list: [], random_part_bytes: 4)
         @content = content
         @affix = affix
         @deny_list = deny_list
+        @random_part_bytes = random_part_bytes
       end
 
       def build
@@ -25,7 +26,7 @@ module Spree
 
       private
 
-      attr_reader :content, :affix, :deny_list
+      attr_reader :content, :affix, :deny_list, :random_part_bytes
 
       def validate_inputs
         raise_error if inputs_invalid?
@@ -65,7 +66,7 @@ module Spree
       end
 
       def random_code
-        SecureRandom.hex(4)
+        SecureRandom.hex(random_part_bytes)
       end
 
       def raise_error
