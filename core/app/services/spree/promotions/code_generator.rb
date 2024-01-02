@@ -51,11 +51,11 @@ module Spree
       end
 
       def prefix_alorithm
-        clear_result.concat(content, random_code)
+        content + random_code
       end
 
       def suffix_alorithm
-        clear_result.concat(random_code, content)
+        random_code + content
       end
 
       def default_algorithm
@@ -68,10 +68,6 @@ module Spree
 
       def random_code
         SecureRandom.hex(4)
-      end
-
-      def clear_result
-        result = ""
       end
 
       def raise_error
