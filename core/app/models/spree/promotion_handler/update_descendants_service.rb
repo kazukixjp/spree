@@ -41,7 +41,7 @@ module Spree
         batch.promotions
           .includes(:promotion_actions)
           .select {|promotion| promotion.credits_count < promotion.usage_limit}
-          .pluck :id
+          .pluck(:id)
       end
     end
   end
