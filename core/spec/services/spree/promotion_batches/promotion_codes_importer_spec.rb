@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Spree
-  describe PromotionBatches::PromoCodesImporter do
+  describe PromotionBatches::PromotionCodesImporter do
     subject(:import_promo_codes) do
       described_class.new(content: content, promotion_batch_id: promotion_batch.id).call
     end

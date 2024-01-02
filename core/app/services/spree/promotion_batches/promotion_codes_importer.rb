@@ -1,6 +1,6 @@
 module Spree
   module PromotionBatches
-    class PromoCodesImporter
+    class PromotionCodesImporter
       Error = Class.new(StandardError)
 
       def initialize(content:, promotion_batch_id:)

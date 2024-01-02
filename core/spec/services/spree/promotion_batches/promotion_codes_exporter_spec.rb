@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Spree
-  describe PromotionBatches::PromoCodesExporter do
+  describe PromotionBatches::PromotionCodesExporter do
     subject(:input) do
       described_class.new(params).call
     end

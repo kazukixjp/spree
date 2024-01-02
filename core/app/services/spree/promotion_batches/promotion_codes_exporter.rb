@@ -1,6 +1,6 @@
 module Spree
   module PromotionBatches
-    class PromoCodesExporter
+    class PromotionCodesExporter
       def initialize(params)
         @promotion_batch = find_promotion_batch(params[:id])
       end
