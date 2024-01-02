@@ -4,12 +4,14 @@ module Spree
       MutuallyExclusiveInputsError = Class.new(StandardError)
       RetriesDepleted = Class.new(StandardError)
 
-      def initialize(config = {})
-        @config = config
+      def initialize(content: nil, affix: nil, deny_list: [])
+        @content = content
+        @affix = affix
+        @deny_list = deny_list
       end
 
       def build
-        validate_inputs if config[:deny_list]
+        validate_inputs unless deny_list.empty?
         success = false
         result = 100.times do
           candidate = compose
@@ -23,16 +25,16 @@ module Spree
 
       private
 
-      attr_reader :config
+      attr_reader :content, :affix, :deny_list
 
       def validate_inputs
         raise_error if inputs_invalid?
       end
 
       def valid?(subject)
-        return true if config[:deny_list].nil?
+        return true if deny_list.empty?
 
-        violation_checks = config[:deny_list].map do |el|
+        violation_checks = deny_list.map do |el|
           subject.include?(el)
         end
 
@@ -40,7 +42,7 @@ module Spree
       end
 
       def compose
-        case config[:affix]
+        case affix
         when :prefix
           prefix_alorithm
         when :suffix
@@ -62,10 +64,6 @@ module Spree
         random_code
       end
 
-      def content
-        config[:content]
-      end
-
       def random_code
         SecureRandom.hex(4)
       end
@@ -75,7 +73,7 @@ module Spree
       end
 
       def inputs_invalid?
-        config[:deny_list].include?(content)
+        deny_list.include?(content)
       end
     end
   end
