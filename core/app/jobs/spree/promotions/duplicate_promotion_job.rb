@@ -32,7 +32,7 @@ module Spree
       end
 
       def code_generator(options)
-        CodeGenerator.new(options)
+        CodeGenerator.new(content: options[:content], affix: options[:affix], deny_list: options[:deny_list])
       end
 
       def generate_code(generator)

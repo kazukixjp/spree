@@ -32,7 +32,7 @@ module Spree
             .and_return([promotion])
           allow(Promotions::CodeGenerator)
             .to receive(:new)
-            .with(options)
+            .with(content: options[:content], affix: options[:affix], deny_list: options[:deny_list])
             .and_return(code_generator)
           allow(code_generator)
             .to receive(:build)
