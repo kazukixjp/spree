@@ -1,10 +1,10 @@
 module Spree
   module PromotionHandler
     class PromotionBatchDuplicator < Spree::PromotionDuplicatorCore
-      def initialize(promotion, promotion_batch_id, random_string: nil, code: nil)
+      def initialize(promotion, promotion_batch_id, random_string: generate_random_string(4), code: nil)
         @promotion = promotion
         @promotion_batch_id = promotion_batch_id
-        @random_string = random_string || generate_random_string(4)
+        @random_string = random_string
         @code = code
       end
 

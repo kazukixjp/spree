@@ -1,8 +1,8 @@
 module Spree
   class PromotionDuplicatorCore
-    def initialize(promotion, random_string: nil)
+    def initialize(promotion, random_string: generate_random_string(4))
       @promotion = promotion
-      @random_string = random_string || generate_random_string(4)
+      @random_string = random_string
     end
 
     def duplicate
