@@ -6,7 +6,7 @@ module Spree
     end
 
     def duplicate
-      raise 'Must implement!'
+      raise NotImplementedError
     end
 
     private
