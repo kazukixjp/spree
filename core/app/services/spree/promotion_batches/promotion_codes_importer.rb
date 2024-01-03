@@ -3,8 +3,8 @@ module Spree
     class PromotionCodesImporter
       Error = Class.new(StandardError)
 
-      def initialize(content:, promotion_batch_id:)
-        @content = content
+      def initialize(file:, promotion_batch_id:)
+        @file = file&.read.to_s
         @promotion_batch = find_promotion_batch(promotion_batch_id)
       end
 
@@ -45,7 +45,7 @@ module Spree
       end
 
       def rows
-        @content.lines.join
+        @file.lines.join
       end
     end  
   end
