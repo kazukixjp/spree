@@ -3,8 +3,10 @@ module Spree
     class PromotionCodesImporter
       Error = Class.new(StandardError)
 
+      ALLOWED_FILE_TYPES = %w(text/csv).freeze
+
       def initialize(file:, promotion_batch_id:)
-        @file = file&.read.to_s
+        @file = file
         @promotion_batch = find_promotion_batch(promotion_batch_id)
       end
 
@@ -25,7 +27,19 @@ module Spree
       end
 
       def validate_file!
-        raise Error, Spree.t('invalid_file') if file_validation_condition
+        raise Error, Spree.t('invalid_file') unless file_valid
+      end
+
+      def file_valid
+        file_type_correct?# && file_not_empty?
+      end
+
+      def file_type_correct?
+        @file.content_type.in?(ALLOWED_FILE_TYPES)
+      end
+
+      def file_not_empty?
+        parsed_rows.present?
       end
 
       def file_validation_condition
@@ -45,7 +59,11 @@ module Spree
       end
 
       def rows
-        @file.lines.join
+        content.lines.join
+      end
+
+      def content
+        @file.read.to_s
       end
     end  
   end
