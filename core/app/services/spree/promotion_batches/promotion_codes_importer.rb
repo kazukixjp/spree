@@ -6,7 +6,8 @@ module Spree
       ALLOWED_FILE_TYPES = %w(text/csv).freeze
 
       def initialize(file:, promotion_batch_id:)
-        @file = file
+        @content_type = file.content_type
+        @content = file.read.to_s
         @promotion_batch = find_promotion_batch(promotion_batch_id)
       end
 
@@ -31,19 +32,15 @@ module Spree
       end
 
       def file_valid
-        file_type_correct?# && file_not_empty?
+        file_type_correct? && file_not_empty?
       end
 
       def file_type_correct?
-        @file.content_type.in?(ALLOWED_FILE_TYPES)
+        @content_type.in?(ALLOWED_FILE_TYPES)
       end
 
       def file_not_empty?
         parsed_rows.present?
-      end
-
-      def file_validation_condition
-        parsed_rows.blank?
       end
 
       def validate_promotion_batch!
@@ -59,11 +56,7 @@ module Spree
       end
 
       def rows
-        content.lines.join
-      end
-
-      def content
-        @file.read.to_s
+        @content.lines.join
       end
     end  
   end
