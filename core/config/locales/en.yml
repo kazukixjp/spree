@@ -1322,7 +1322,7 @@ en:
     promotion: Promotion
     promotion_batch: Promotion Batch
     promotion_batches: Promotion Batches
-    promotion_batch_populated: Promotion Batch is being pupulated.
+    promotion_batch_populated: Promotion Batch is being populated.
     promotionable: Promotable
     promotion_not_cloned: "Promotion has not been cloned. Reason: %{error}"
     promotion_action: Promotion Action
