@@ -11,6 +11,11 @@ module Spree
           end
 
           def csv_import
+            file = params[:file]
+            Spree::PromotionBatches::PromotionCodesImporter.new(file: file, promotion_batch_id: params[:id]).call
+            render json: { message: Spree.t('code_upload') }, status: :ok
+          rescue Spree::PromotionBatches::PromotionCodesImporter::Error => e
+            render json: { error: e.message }, status: :unprocessable_entity
           end
 
           private
