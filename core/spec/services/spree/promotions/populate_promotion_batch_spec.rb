@@ -22,13 +22,27 @@ module Spree
           .with(options)
       end
 
-      it "enqueues DuplicatePromotionJob jobs", sidekiq: :inline do
-        expect(Spree::Promotions::DuplicatePromotionJob)
-          .to receive(:perform_later)
-          .at_least(options[:batch_size]).times
-          .with(template_promotion_id: template_promotion_id, batch_id: batch_id, options: {})
+      context "when PromotionBatch has a template assigned" do
+        it "enqueues DuplicatePromotionJob jobs", sidekiq: :inline do
+          expect(Spree::Promotions::DuplicatePromotionJob)
+            .to receive(:perform_later)
+            .at_least(options[:batch_size]).times
+            .with(template_promotion_id: template_promotion_id, batch_id: batch_id, options: {})
 
-        populate_promotion_batch
+          populate_promotion_batch
+        end
+      end
+
+      context "when PromotionBatch hasn't a template assigned" do
+        before do
+          allow(promotion_batch)
+            .to receive(:template_promotion_id)
+            .and_return(nil)
+        end
+
+        it "raises an error" do
+          expect { populate_promotion_batch }.to raise_error Spree::Promotions::PopulatePromotionBatch::TemplateNotFoundError
+        end
       end
     end
   end
