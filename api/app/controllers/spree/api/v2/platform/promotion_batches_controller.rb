@@ -18,6 +18,22 @@ module Spree
             render json: { error: e.message }, status: :unprocessable_entity
           end
 
+          def populate
+            batch_id = params[:id]
+            options = {
+              batch_size: params[:batch_size].to_i,
+              affix: params.dig(:code, :affix)&.to_sym,
+              content: params[:affix_content],
+              deny_list: params[:forbidden_phrases].split,
+              random_part_bytes: params[:random_part_bytes].to_i
+            }
+
+            Spree::Promotions::PopulatePromotionBatch.new(batch_id, options).call
+              render json: { message: Spree.t('promotion_batch_populated') }, status: :ok
+            rescue Spree::Promotions::PopulatePromotionBatch::TemplateNotFoundError => e
+              render json: { error: e.message }, status: :unprocessable_entity
+          end
+
           private
 
           def model_class
