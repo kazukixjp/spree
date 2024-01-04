@@ -29,6 +29,7 @@ module Spree
           end
 
           def spree_permitted_attributes
+            [:template_promotion_id]
           end
         end
       end
