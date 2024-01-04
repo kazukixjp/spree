@@ -1,8 +1,7 @@
 module Spree
   module Promotions
     class PopulatePromotionBatch
-      def initialize(template_promotion_id, batch_id, options = {})
-        @template_promotion_id = template_promotion_id
+      def initialize(batch_id, options = {})
         @batch_id = batch_id
         @options = options
       end
@@ -16,10 +15,14 @@ module Spree
       private
 
       attr_accessor :options
-      attr_reader :template_promotion_id, :batch_id
+      attr_reader :batch_id
 
       def size
         options[:batch_size]
+      end
+
+      def template_promotion_id
+        PromotionBatch.find(batch_id).template_promotion_id
       end
     end
   end
