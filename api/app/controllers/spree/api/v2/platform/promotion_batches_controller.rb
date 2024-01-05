@@ -3,6 +3,12 @@ module Spree
     module V2
       module Platform
         class PromotionBatchesController < ResourceController
+          def create
+            super
+          rescue ActiveRecord::InvalidForeignKey => e
+            render json: { error: e.message }, status: :unprocessable_entity
+          end
+
           def csv_export
             send_data Spree::PromotionBatches::PromotionCodesExporter.new(params).call,
                       filename: "promo_codes_from_batch_id_#{params[:id]}.csv",

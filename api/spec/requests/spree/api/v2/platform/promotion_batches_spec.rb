@@ -56,7 +56,6 @@ describe 'Promotion API v2 spec', type: :request do
 
         expect(json_response['included'].size).to eq 5
       end
-      end
     end
   end
 end
