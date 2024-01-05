@@ -1285,7 +1285,6 @@ en:
       sort_by: SORT BY
       top_sellers: TOP SELLERS
       type: TYPE
-    populate: Populate
     populate_get_error: Something went wrong. Please try adding the item again.
     powered_by: Powered by
     pre_tax_refund_amount: Pre-Tax Refund Amount
@@ -1322,6 +1321,16 @@ en:
     promotion: Promotion
     promotion_batch: Promotion Batch
     promotion_batches: Promotion Batches
+    promotion_batch_form:
+      affix: Affix
+      affix_content: Affix content
+      batch_size: Batch size
+      forbidden_phrases: Forbidden phrases
+      import_codes: Import codes from CSV
+      populate: Populate
+      prefix: Prefix
+      random_part_bytes: Random part bytes
+      sufix: Sufix
     promotion_batch_populated: Promotion Batch is being populated.
     promotionable: Promotable
     promotion_not_cloned: "Promotion has not been cloned. Reason: %{error}"
@@ -1376,7 +1385,6 @@ en:
         description: Order includes products with specified taxon(s)
         name: Taxon(s)
     promotions: Promotions
-    promotion_batches: Promotion Batches
     promotion_uses: Promotion uses
     propagate_all_variants: Propagate all variants
     properties: Properties
