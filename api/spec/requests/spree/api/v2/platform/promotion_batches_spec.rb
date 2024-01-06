@@ -85,4 +85,28 @@ describe 'Promotion API v2 spec', type: :request do
       end
     end
   end
+
+  describe 'promotion_batches#populate' do
+    context 'with valid params' do
+      before { post "/api/v2/platform/promotion_batches/#{existing_promotion_batch.id}/populate", params: params, headers: bearer_token }
+
+      let(:existing_promotion_batch) { create(:promotion_batch) }
+
+      let(:params) do
+        {
+          batch_size: 2,
+          code: {
+              affix: 'prefix'
+          },
+          affix_content: 'BLACKWEEK_',
+          forbidden_phrases: 'forbidden phrases',
+          random_part_bytes: 4
+        }
+      end
+
+      it 'is successful' do
+        expect(json_response[:message]).to eq('Promotion Batch is being populated.')
+      end
+    end
+  end
 end
