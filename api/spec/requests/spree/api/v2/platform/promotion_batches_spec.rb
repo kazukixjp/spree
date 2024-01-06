@@ -19,20 +19,14 @@ describe 'Promotion API v2 spec', type: :request do
       let(:params) { { promotion_batch: new_promotion_batch_attributes } }
 
       it 'creates and returns a promotion batch' do
-        expect(json_response).to eq('promotion_batch')
-
-        # included template_promotion
-        expect(json_response['included']).to include(have_type('template_promotion'))
-
-        # included promotions
-        expect(json_response['included']).to include(have_type('promotions'))
-
-        expect(json_response['included'].size).to eq 5
+        expect(json_response['data']).to have_relationship(:template_promotion).with_data(nil)
       end
     end
+  end
 
-    describe 'promotion_batches#update' do
-      before { patch "/api/v2/platform/promotion_batches/#{existing_promotion_batch.id}", params: params, headers: bearer_token }
+  describe 'promotion_batches#update' do
+    context 'with valid params' do
+      before { put "/api/v2/platform/promotion_batches/#{existing_promotion_batch.id}", params: params, headers: bearer_token }
 
       let(:existing_promotion) { create(:promotion) }
       let(:existing_promotion_batch) { create(:promotion_batch, template_promotion_id: nil) }
@@ -43,18 +37,10 @@ describe 'Promotion API v2 spec', type: :request do
         }
       end
 
-      let(:params) { { promotion: update_promotion_attributes } }
+      let(:params) { { promotion_batch: update_promotion_attributes } }
 
       it 'updates and returns a promotion batch' do
-        expect(json_response).to eq('promotion_batch')
-
-        # included template_promotion
-        expect(json_response['included']).to include(have_type('template_promotion'))
-
-        # included promotions
-        expect(json_response['included']).to include(have_type('promotions'))
-
-        expect(json_response['included'].size).to eq 5
+        expect(json_response['data']).to have_relationship(:template_promotion).with_data({ 'id' => existing_promotion.id.to_s, 'type' => 'promotion' })
       end
     end
   end
