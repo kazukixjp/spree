@@ -6,8 +6,8 @@ module Spree
       ALLOWED_FILE_TYPES = %w(text/csv).freeze
 
       def initialize(file:, promotion_batch_id:)
-        @content_type = file.content_type
-        @content = file.read.to_s
+        @content_type = file&.content_type
+        @content = file&.read.to_s
         @promotion_batch = find_promotion_batch(promotion_batch_id)
       end
 

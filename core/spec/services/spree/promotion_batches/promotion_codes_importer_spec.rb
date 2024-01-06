@@ -66,5 +66,13 @@ module Spree
         expect { import_promo_codes }.to raise_error Spree::PromotionBatches::PromotionCodesImporter::Error
       end
     end
+
+    context "when there's no file" do
+      let(:file) { nil }
+
+      it "raises an error" do
+        expect { import_promo_codes }.to raise_error Spree::PromotionBatches::PromotionCodesImporter::Error
+      end
+    end
   end
 end
