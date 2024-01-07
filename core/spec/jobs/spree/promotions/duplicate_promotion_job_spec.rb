@@ -3,20 +3,15 @@ require 'spec_helper'
 module Spree
   describe Promotions::DuplicatePromotionJob do
     describe "#perform" do
-      let(:promotion) { build(:promotion, code: existing_code) }
-      let(:promotion_batch) { build(:promotion_batch) }
-      let(:duplicator) { instance_double(Spree::PromotionHandler::PromotionDuplicator) }
-      let(:code_generator) { instance_double(Promotions::CodeGenerator) }
-      let(:existing_code) { "existing_code" }
+      let(:promotion) { build(:promotion) }
+      let(:promotion_batch) { create(:promotion_batch) }
       let(:new_code) { 'new_code' }
+      let(:duplicator) { instance_double(Spree::PromotionHandler::PromotionDuplicator) }
 
       before do
         allow(Spree::Promotion)
           .to receive(:find)
           .and_return(promotion)
-        allow(Spree::PromotionBatch)
-          .to receive(:find)
-          .and_return(promotion_batch)
       end
 
       context 'when code is NOT provided' do
@@ -27,15 +22,10 @@ module Spree
         end
 
         before do
-          allow(promotion_batch)
-            .to receive(:promotions)
-            .and_return([promotion])
-          allow(Promotions::CodeGenerator)
-            .to receive(:new)
-            .and_return(code_generator)
-          allow(code_generator)
+          allow(Spree::PromotionBatches::BatchCodeGenerator)
             .to receive(:build)
-            .and_return(existing_code, new_code)
+            .with(promotion_batch.id, options)
+            .and_return(new_code)
           allow(Spree::PromotionHandler::PromotionBatchDuplicator)
             .to receive(:new)
             .with(promotion, promotion_batch.id, code: new_code)
