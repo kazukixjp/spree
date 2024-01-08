@@ -4,7 +4,7 @@ module Spree
   describe Promotions::DuplicatePromotionJob do
     describe "#perform" do
       let(:promotion) { build(:promotion) }
-      let(:promotion_batch) { create(:promotion_batch) }
+      let(:promotion_batch) { build(:promotion_batch) }
       let(:new_code) { 'new_code' }
       let(:duplicator) { instance_double(Spree::PromotionHandler::PromotionDuplicator) }
 
