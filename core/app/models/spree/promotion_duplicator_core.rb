@@ -11,10 +11,10 @@ module Spree
 
     private
 
-    def copy_rules
+    def copy_rules(new_promotion)
       @promotion.promotion_rules.each do |rule|
         new_rule = rule.dup
-        @new_promotion.promotion_rules << new_rule
+        new_promotion.promotion_rules << new_rule
 
         new_rule.users = rule.users if rule.try(:users)
         new_rule.taxons = rule.taxons if rule.try(:taxons)
@@ -27,12 +27,12 @@ module Spree
       Array.new(number) { charset.sample }.join
     end
 
-    def copy_actions
+    def copy_actions(new_promotion)
       @promotion.promotion_actions.each do |action|
         new_action = action.dup
         new_action.calculator = action.calculator.dup if action.try(:calculator)
 
-        @new_promotion.promotion_actions << new_action
+        new_promotion.promotion_actions << new_action
 
         next unless action.try(:promotion_action_line_items)
 
