@@ -9,6 +9,16 @@ module Spree
             render json: { error: e.message }, status: :unprocessable_entity
           end
 
+          def destroy
+            # result = destroy_service.call(promotion_batch: resource)
+
+            # if result.success?
+            #   head 204
+            # else
+            #   render_error_payload(result.error)
+            # end
+          end
+
           def csv_export
             send_data Spree::PromotionBatches::PromotionCodesExporter.new(params).call,
                       filename: "promo_codes_from_batch_id_#{params[:id]}.csv",
@@ -52,6 +62,10 @@ module Spree
 
           def spree_permitted_attributes
             [:template_promotion_id]
+          end
+
+          def destroy_service
+            Spree::Api::Dependencies.platform_promotion_batch_destroy_service.constantize
           end
         end
       end
