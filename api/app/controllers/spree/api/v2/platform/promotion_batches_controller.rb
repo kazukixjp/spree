@@ -10,13 +10,13 @@ module Spree
           end
 
           def destroy
-            # result = destroy_service.call(promotion_batch: resource)
+            result = destroy_service.call(promotion_batch: resource)
 
-            # if result.success?
-            #   head 204
-            # else
-            #   render_error_payload(result.error)
-            # end
+            if result.success?
+              head 204
+            else
+              render_error_payload(result.error)
+            end
           end
 
           def csv_export
