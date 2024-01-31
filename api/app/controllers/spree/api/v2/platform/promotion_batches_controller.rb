@@ -20,7 +20,7 @@ module Spree
           end
 
           def csv_export
-            send_data Spree::PromotionBatches::PromotionCodesExporter.new(params).call,
+            send_data Spree::PromotionBatches::PromotionCodesExporter.new.call(promotion_batch: resource),
                       filename: "promo_codes_from_batch_id_#{params[:id]}.csv",
                       disposition: :attachment,
                       type: 'text/csv'
