@@ -1,3 +1,5 @@
+require 'csv'
+
 module Spree
   module PromotionBatches
     class Export
