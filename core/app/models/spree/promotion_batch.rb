@@ -1,15 +1,21 @@
 module Spree
   class PromotionBatch < Spree::Base
-    validate :template_assignment, on: :update
-
     has_many :promotions
-    belongs_to :template_promotion, class_name: "Promotion"
+    belongs_to :template_promotion, class_name: 'Promotion'
 
-    private
+    serialize :codes, type: Array, coder: YAML
 
-    def template_assignment
-      if template_promotion_id_changed? && template_promotion_id_was.present?
-        errors.add(:template_promotion_id, :template_promotion_already_assigned, message: Spree.t(:template_promotion_already_assigned))
+    state_machine initial: :pending do
+      event :start do
+        transition from: :pending, to: :generating
+      end
+
+      event :complete do
+        transition from: :generating, to: :completed
+      end
+
+      event :error do
+        transition from: :generating, to: :error
       end
     end
   end

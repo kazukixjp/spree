@@ -4,9 +4,16 @@ module Spree
       module Platform
         class PromotionBatchesController < ResourceController
           def create
-            super
-          rescue ActiveRecord::InvalidForeignKey => e
-            render json: { error: e.message }, status: :unprocessable_entity
+            template_promotion = ::Spree::Promotion.find(params[:template_promotion_id])
+            promotion_batch = ::Spree::PromotionBatches::CreateWithRandomCodes.new.call(
+              template_promotion: template_promotion,
+              amount: params[:amount],
+              random_characters: params[:random_characters],
+              prefix: params[:prefix],
+              suffix: params[:suffix]
+            )
+
+            render_serialized_payload { promotion_batch }
           end
 
           def destroy
@@ -20,44 +27,26 @@ module Spree
           end
 
           def csv_export
-            send_data Spree::PromotionBatches::PromotionCodesExporter.new.call(promotion_batch: resource),
+            send_data ::Spree::PromotionBatches::Export.new.call(promotion_batch: resource),
                       filename: "promo_codes_from_batch_id_#{params[:id]}.csv",
                       disposition: :attachment,
                       type: 'text/csv'
           end
 
-          def csv_import
-            file = params[:file]
-            Spree::PromotionBatches::PromotionCodesImporter.new(file: file, promotion_batch_id: params[:id]).call
-            render json: { message: Spree.t('code_upload') }, status: :ok
-          rescue Spree::PromotionBatches::PromotionCodesImporter::Error => e
-            render json: { error: e.message }, status: :unprocessable_entity
-          end
+          def import
+            template_promotion = ::Spree::Promotion.find(params[:template_promotion_id])
+            promotion_batch = ::Spree::PromotionBatches::CreateWithCodes.new.call(
+              template_promotion: template_promotion,
+              codes: params[:codes]
+            )
 
-          def populate
-            batch_id = params[:id]
-            options = {
-              batch_size: params[:batch_size].to_i,
-              affix: params.dig(:code, :affix)&.to_sym,
-              content: params[:affix_content],
-              deny_list: params[:forbidden_phrases].split,
-              random_part_bytes: params[:random_part_bytes].to_i
-            }
-
-            Spree::Promotions::PopulatePromotionBatch.new(batch_id, options).call
-              render json: { message: Spree.t('promotion_batch_populated') }, status: :ok
-            rescue Spree::Promotions::PopulatePromotionBatch::TemplateNotFoundError => e
-              render json: { error: e.message }, status: :unprocessable_entity
+            render_serialized_payload { promotion_batch }
           end
 
           private
 
           def model_class
-            Spree::PromotionBatch
-          end
-
-          def scope_includes
-            [:promotion]
+            ::Spree::PromotionBatch
           end
 
           def spree_permitted_attributes
@@ -65,7 +54,7 @@ module Spree
           end
 
           def destroy_service
-            Spree::Api::Dependencies.platform_promotion_batch_destroy_service.constantize
+            ::Spree::Api::Dependencies.platform_promotion_batch_destroy_service.constantize
           end
         end
       end
