@@ -27,6 +27,7 @@ module Spree
         while attempts < MAX_ATTEMPTS
           code = @generate_code.call(random_characters: random_characters, prefix: prefix, suffix: suffix)
           return code unless existing_codes.include?(code)
+          attempts += 1
         end
 
         raise GenerateFailedError

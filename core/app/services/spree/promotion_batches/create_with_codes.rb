@@ -3,10 +3,6 @@ module Spree
     class CreateWithCodes
       Error = Class.new(StandardError)
 
-      def initialize(populate: ::Spree::PromotionBatches::Populate.new)
-        @populate = populate
-      end
-
       def call(template_promotion:, codes:)
         validate_codes!(codes)
 
@@ -16,6 +12,8 @@ module Spree
         )
 
         ::Spree::PromotionBatches::PopulateJob.perform_later(promotion_batch.id)
+
+        promotion_batch
       end
 
       private

@@ -3,6 +3,8 @@ module Spree
     has_many :promotions
     belongs_to :template_promotion, class_name: 'Promotion'
 
+    validate :validate_codes_present
+
     serialize :codes, type: Array, coder: YAML
 
     state_machine initial: :pending do
@@ -17,6 +19,10 @@ module Spree
       event :error do
         transition from: :generating, to: :error
       end
+    end
+
+    def validate_codes_present
+      errors.add(:codes, Spree.t('no_codes_present')) unless codes.present?
     end
   end
 end
