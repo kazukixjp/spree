@@ -5,7 +5,7 @@ module Spree
 
       MAX_ATTEMPTS = 3
 
-      def initialize(generate_code: ::Spree::PromotionBatches::GenerateCodes)
+      def initialize(generate_code: ::Spree::PromotionBatches::GenerateCode.new)
         @generate_code = generate_code
       end
 

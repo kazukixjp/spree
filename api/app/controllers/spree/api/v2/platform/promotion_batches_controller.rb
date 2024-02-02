@@ -4,26 +4,16 @@ module Spree
       module Platform
         class PromotionBatchesController < ResourceController
           def create
-            template_promotion = ::Spree::Promotion.find(params[:template_promotion_id])
+            template_promotion = ::Spree::Promotion.find(params[:promotion_batch][:template_promotion_id])
             promotion_batch = ::Spree::PromotionBatches::CreateWithRandomCodes.new.call(
               template_promotion: template_promotion,
-              amount: params[:amount],
-              random_characters: params[:random_characters],
-              prefix: params[:prefix],
-              suffix: params[:suffix]
+              amount: params[:promotion_batch][:amount].to_i,
+              random_characters: params[:promotion_batch][:random_characters].to_i,
+              prefix: params[:promotion_batch][:prefix],
+              suffix: params[:promotion_batch][:suffix]
             )
 
             render_serialized_payload { promotion_batch }
-          end
-
-          def destroy
-            result = destroy_service.call(promotion_batch: resource)
-
-            if result.success?
-              head 204
-            else
-              render_error_payload(result.error)
-            end
           end
 
           def csv_export
@@ -34,10 +24,10 @@ module Spree
           end
 
           def import
-            template_promotion = ::Spree::Promotion.find(params[:template_promotion_id])
+            template_promotion = ::Spree::Promotion.find(params[:promotion_batch][:template_promotion_id])
             promotion_batch = ::Spree::PromotionBatches::CreateWithCodes.new.call(
               template_promotion: template_promotion,
-              codes: params[:codes]
+              codes: params[:promotion_batch][:codes]
             )
 
             render_serialized_payload { promotion_batch }
@@ -51,10 +41,6 @@ module Spree
 
           def spree_permitted_attributes
             [:template_promotion_id]
-          end
-
-          def destroy_service
-            ::Spree::Api::Dependencies.platform_promotion_batch_destroy_service.constantize
           end
         end
       end

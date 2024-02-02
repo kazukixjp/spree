@@ -29,6 +29,8 @@ module Spree
     has_many :store_promotions, class_name: 'Spree::StorePromotion'
     has_many :stores, class_name: 'Spree::Store', through: :store_promotions
 
+    has_many :promotion_batches, foreign_key: 'template_promotion_id'
+
     accepts_nested_attributes_for :promotion_actions, :promotion_rules
 
     validates_associated :rules
@@ -51,6 +53,7 @@ module Spree
       SQL
     }
     scope :non_batched, -> { where(promotion_batch_id: nil) }
+    scope :templates, -> { all }
 
     self.whitelisted_ransackable_attributes = ['path', 'promotion_category_id', 'code']
 

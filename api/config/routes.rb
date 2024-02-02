@@ -73,7 +73,7 @@ Spree::Core::Engine.add_routes do
         resources :promotion_rules
 
         # Promotion Batches API
-        resources :promotion_batches do
+        resources :promotion_batches, only: %i[index show create] do
           member do
             get :csv_export, to: 'promotion_batches#csv_export'
           end
